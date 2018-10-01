@@ -8,6 +8,6 @@ export class HomeService{
     }
     
     getData(){
-        return this.httpService.sendGETRequest("https://localhost:8003")
+        return this.httpService.sendGETRequest("http://localhost/get")
     }
 }

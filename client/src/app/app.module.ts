@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { Geolocation } from '@ionic-native/geolocation';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTPService } from './httpservice.service';
+import { HttpModule } from '@angular/http';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { HTTPService } from './httpservice.service';
   imports: [
     BrowserModule,
     HttpClientModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],

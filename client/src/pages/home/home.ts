@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { HomeService } from './home.service';
+import {Http,Headers} from '@angular/http';
+
 
 @Component({
   selector: 'page-home',
@@ -9,13 +11,14 @@ import { HomeService } from './home.service';
   providers: [HomeService]
 })
 export class HomePage {
-  rockets: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService ) {
+  lat: any;
+  long:any;
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService,private http:Http ) {
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log('lat');
       console.log('long');
-      console.log(resp.coords.latitude);
-      console.log(resp.coords.longitude);
+      this.lat=resp.coords.latitude;
+      this.long=resp.coords.longitude;
      }).catch((error) => {
        console.log('Error getting location', error);
      });
@@ -27,16 +30,27 @@ export class HomePage {
       // data.coords.longitude
      });
 
-     this.homeService.getData()
-    .subscribe((data) => {
-      this.rockets = data;
-      console.log(this.rockets);
-    })
+     //this.homeService.getData()
+    //.subscribe((data) => {
+     // this.rockets = data;
+     // console.log(this.rockets);
+    //})
 
+    
     
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad RocketsPage');
+    let headers=new Headers();
+    headers.append('Content-Type','application/json');
+    let body={
+      lattitude:String(this.lat),
+      longitude:String(this.long)
+
+    };
+    this.http.post('http://httpbin.org/post',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+      console.log(data);
+    });
   }
   
  
