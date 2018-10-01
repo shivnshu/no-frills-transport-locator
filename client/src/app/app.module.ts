@@ -7,6 +7,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { Geolocation } from '@ionic-native/geolocation';
+import { HttpClientModule } from '@angular/common/http';
+import { HTTPService } from './httpservice.service';
 
 
 @NgModule({
@@ -16,6 +18,7 @@ import { Geolocation } from '@ionic-native/geolocation';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -25,6 +28,7 @@ import { Geolocation } from '@ionic-native/geolocation';
   ],
   providers: [
     StatusBar,
+    HTTPService,
     Geolocation,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

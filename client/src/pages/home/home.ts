@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { HomeService } from './home.service';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  providers: [HomeService]
 })
 export class HomePage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation ) {
+  rockets: any;
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService ) {
     this.geolocation.getCurrentPosition().then((resp) => {
       console.log('lat');
       console.log('long');
@@ -24,7 +26,19 @@ export class HomePage {
       // data.coords.latitude
       // data.coords.longitude
      });
+
+     this.homeService.getData()
+    .subscribe((data) => {
+      this.rockets = data;
+      console.log(this.rockets);
+    })
+
+    
   }
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad RocketsPage');
+  }
+  
  
 
 
