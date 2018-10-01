@@ -41,6 +41,10 @@ export class HomePage {
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad RocketsPage');
+   
+  }
+
+  SendLocation(){
     let headers=new Headers();
     headers.append('Content-Type','application/json');
     let body={
