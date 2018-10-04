@@ -14,6 +14,10 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 export class HomePage  {
   lat: any;
   long:any;
+  name:any;
+  message:any;
+  mobile:any;
+  carnum:any;
   authForm: FormGroup;
   
   constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService,private http:Http, public formBuilder: FormBuilder ) {
@@ -36,7 +40,7 @@ export class HomePage  {
      this.navCtrl = navCtrl;
  
         this.authForm = formBuilder.group({
-            username: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z]*')])],
+            username: ['', Validators.compose([Validators.required, Validators.pattern('[a-z A-Z]*')])],
             password: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]*'),Validators.minLength(10), Validators.maxLength(10)])],
             carnum: ['', Validators.compose([Validators.required])],
             mess: ['', Validators.compose([])]
@@ -58,7 +62,11 @@ export class HomePage  {
     headers.append('Content-Type','application/json');
     let body={
       lattitude:String(this.lat),
-      longitude:String(this.long)
+      longitude:String(this.long),
+      name:String(this.name),
+      message:String(this.message),
+      mobile:String(this.mobile),
+      carnum:String(this.carnum),
 
     };
     this.http.post('http://httpbin.org/post',JSON.stringify(body),{headers:headers}).subscribe(data=>{
@@ -68,10 +76,14 @@ export class HomePage  {
 
   onSubmit(value: any): void { 
     if(this.authForm.valid) {
-        window.localStorage.setItem('username', value.username);
+        /*window.localStorage.setItem('username', value.username);
         window.localStorage.setItem('password', value.password);
         window.localStorage.setItem('carnum', value.carnum);
-        window.localStorage.setItem('mess', value.mess);
+        window.localStorage.setItem('mess', value.mess);*/
+        this.carnum=value.carnum;
+        this.message=value.mess;
+        this.name=value.username;
+        this.mobile=value.password;
 
         this.SendLocation();
     }
