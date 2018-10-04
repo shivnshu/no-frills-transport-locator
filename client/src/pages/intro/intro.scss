@@ -1,0 +1,28 @@
+page-intro {
+    .login-background {
+        background: url("../../assets/imgs/intro.jpeg") no-repeat fixed center;
+        width:100%;
+        height:100%;
+        position: absolute;
+        
+         
+      }
+      .center-text {
+        text-align: bottom;
+        font-size: 6vw;
+        color: color($colors, dark, base);
+        text-transform: capitalize;
+        margin-top:30px;
+        margin-bottom: 10px;
+      }
+     
+      .btn img {  
+        left: 50%;
+        margin-left: -15px; /* 1/2 of total width of your img */
+        top: 50%;
+        margin-top: -15px; /* 1/2 of total height of your img */
+        position: absolute;
+        
+    } 
+      button { height: 18% !important; margin: 5vw 3vw 0 !important; padding: 0 !important;width:250px; }
+}

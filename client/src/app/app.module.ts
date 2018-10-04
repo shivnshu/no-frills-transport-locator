@@ -6,16 +6,20 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { IntroPage } from '../pages/intro/intro';
 import { Geolocation } from '@ionic-native/geolocation';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTPService } from './httpservice.service';
 import { HttpModule } from '@angular/http';
 
 
+
+
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    IntroPage
   ],
   imports: [
     BrowserModule,
@@ -26,6 +30,7 @@ import { HttpModule } from '@angular/http';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    IntroPage,
     HomePage
   ],
   providers: [
