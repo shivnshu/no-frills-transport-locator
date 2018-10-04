@@ -1,7 +1,7 @@
 # RESTful Go APIs Server
 
 ## Directory Structure
-`
+```
 .
 ├── README.md
 ├── src
@@ -12,12 +12,13 @@
 │           ├── model.go ............: Database schemas
 │           ├── repository.go .......: Interface to MongoDB
 │           └── router.go ...........: Routing definitions
-└── transportLocator.js
-`
+└── transportLocator.js .............: Example mongoDB entry
+```
 
 ## Installation Instructions
-1. Run `export GOPATH=$(pwd)`
-2. Run `go get github.com/gorilla/handlers`
-3. Run `go get github.com/gorilla/mux`
-4. Run `go get gopkg.in/mgo.v2`
-5. Build using `go build -o server.out server.go`
+1. Run `mongo < transportLocator.js` to load example database entry
+2. Run `export GOPATH=$(pwd)`
+3. Run `go get github.com/gorilla/handlers`
+4. Run `go get github.com/gorilla/mux`
+5. Run `go get gopkg.in/mgo.v2`
+6. Build using `go build -o server.out server.go`
