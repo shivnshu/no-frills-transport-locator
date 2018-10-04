@@ -1,13 +1,33 @@
 package transport_locator
 
-import ()
+import (
+	"fmt"
+	"gopkg.in/mgo.v2"
+)
 
 type Repository struct{}
 
-const SERVER = "mongodb://localhost:27017"
+const SERVER = "mongodb://127.0.0.1:27017"
 
 const DBName = "transportLocator"
 
 const Collection = "locations"
 
-// Add Methods to modify database
+// Return all locations in db
+func (r Repository) GetAllLocations() transportLocations {
+	session, err := mgo.Dial(SERVER)
+
+	if err != nil {
+		fmt.Println("Failed to establish connection to MongoDB")
+	}
+
+	defer session.Close()
+
+	c := session.DB(DBName).C(Collection)
+	results := transportLocations{}
+
+	if err := c.Find(nil).All(&results); err != nil {
+		fmt.Println("Failed to get results: ", err)
+	}
+	return results
+}

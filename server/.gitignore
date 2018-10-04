@@ -1,3 +1,4 @@
+*.out
 pkg
 src/*
 !src/server
