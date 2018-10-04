@@ -7,7 +7,7 @@ import (
 
 type Repository struct{}
 
-const SERVER = "mongodb://127.0.0.1:27017"
+const SERVER = "mongodb://172.17.0.1:27017"
 
 const DBName = "transportLocator"
 
