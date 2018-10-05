@@ -32,7 +32,7 @@ var routes = Routes{
 	},
 	Route{
 		"GetNearby",
-		"GET",
+		"POST",
 		"/get_nearby",
 		controller.GetNearby,
 	},
