@@ -23,18 +23,63 @@ func (c *Controller) GetAllLocations(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called UpdateLocation controller")
-	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	location := transportLocation{}
+
+	err := json.NewDecoder(r.Body).Decode(&location)
+	if err != nil {
+		panic(err)
+	}
+
+	res := c.Repository.UpdateLocation(location)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Accessed UpdateLocation controller"))
+	if res {
+		w.Write([]byte("Updation successful"))
+	} else {
+		w.Write([]byte("Updation failed"))
+	}
 	return
+
+	/*
+		// DEBUG
+		locationJson, err := json.Marshal(location)
+		if err != nil {
+			panic(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(locationJson)
+		return
+	*/
 }
 
 func (c *Controller) GetNearby(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called GetNearby controller")
-	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+
+	userLocation := queryLocation{}
+
+	err := json.NewDecoder(r.Body).Decode(&userLocation)
+	if err != nil {
+		panic(err)
+	}
+
+	locations := c.Repository.GetNearBy(userLocation)
+	data, _ := json.Marshal(locations)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Accessed GetNearby controller"))
+	w.Write(data)
 	return
+
+	/*
+		// DEBUG
+		userLocationJson, err := json.Marshal(userLocation)
+		if err != nil {
+			panic(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(userLocationJson)
+		return
+	*/
 }

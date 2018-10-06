@@ -9,17 +9,6 @@ import (
 
 type Repository struct{}
 
-/*type dbQuery struct {
-	Latitude struct {
-		greaterThan float64 `bson:"$gt"`
-		lessThan    float64 `bson:"$lt"`
-	} `json:"lat"`
-	Longitude struct {
-		greaterThan float64 `bson:"$gt"`
-		lessThan    float64 `bson:"$lt"`
-	} `json:"long"`
-}*/
-
 const SERVER = "mongodb://172.17.0.1:27017"
 
 const DBName = "transportLocator"
@@ -45,6 +34,7 @@ func (r Repository) GetAllLocations() transportLocations {
 	return results
 }
 
+// Update/Add car location
 func (r Repository) UpdateLocation(location transportLocation) bool {
 	session, err := mgo.Dial(SERVER)
 	defer session.Close()
@@ -64,27 +54,18 @@ func (r Repository) GetNearBy(userLocation queryLocation) transportLocations {
 	session, _ := mgo.Dial(SERVER)
 	defer session.Close()
 
-	minLat := userLocation.Latitude - userLocation.searchParameter
-	maxLat := userLocation.Latitude + userLocation.searchParameter
+	minLat := userLocation.Latitude - userLocation.SearchParameter
+	maxLat := userLocation.Latitude + userLocation.SearchParameter
 
-	minLong := userLocation.Longitude - userLocation.searchParameter
-	maxLong := userLocation.Longitude + userLocation.searchParameter
+	minLong := userLocation.Longitude - userLocation.SearchParameter
+	maxLong := userLocation.Longitude + userLocation.SearchParameter
 
-	/*	query := &dbQuery{
-		Latitude{
-			greaterThan: minLat,
-			lessThan:    maxLat,
-		},
-		Longitude{
-			greaterThan: minLong,
-			lessThan:    maxLong,
-		}}*/
 	query := bson.M{"lat": bson.M{"$gt": minLat, "$lt": maxLat}, "long": bson.M{"$gt": minLong, "$lt": maxLong}}
-	fmt.Println("DEBUG: query is ", query)
+	// fmt.Println("DEBUG: query is ", query)
 
 	results := transportLocations{}
 	_ = session.DB(DBName).C(Collection).Find(query).All(&results)
 
-	fmt.Println("DEBUG: getNearbyResult ", results)
+	// fmt.Println("DEBUG: getNearbyResult ", results)
 	return results
 }
