@@ -32,12 +32,15 @@
 6. Build using `go build -o server.out server.go`
 
 ## Usage
-* `curl --request GET http://localhost:8000/get_all_locations`
-* `curl --header "Content-Type: application/json" \
-	    --request POST \
-		--data '{"ID":98, "PhoneNumber":"+12809748", "Latitude": 120.5, "Longitude": 130.34, "Name": "Usage", "CarNumber": "1234", "Message": "i am a demonstration"}' \
-		http://localhost:8000/update_location` 
-* `curl --header "Content-Type: application/json" \
-        --request POST \
-        --data '{"Latitude": 125.32, "Longitude": 120.41, "SearchParameter": 10}' \
-        http://localhost:8000/get_nearby` 
+* Get all Transports in Database
+```
+curl --request GET http://localhost:8000/get_all_locations
+```
+* Update or Add an entry
+```
+curl --header "Content-Type: application/json" --request POST --data '{"ID":98, "PhoneNumber":"+12809748", "Latitude": 120.5, "Longitude": 130.34, "Name": "Usage", "CarNumber": "1234", "Message": "i am a demonstration"}' http://localhost:8000/update_location
+```
+* Get Nearby Transport
+```
+curl --header "Content-Type: application/json" --request POST --data '{"Latitude": 125.32, "Longitude": 120.41, "SearchParameter": 10}' http://localhost:8000/get_nearby
+```
