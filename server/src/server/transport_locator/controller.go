@@ -38,6 +38,7 @@ func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.Write([]byte("Updation failed"))
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	return
 
 	/*

@@ -29,6 +29,11 @@ export class HomePage  {
      }).catch((error) => {
        console.log('Error getting location', error);
      });
+
+     this.homeService.getData()
+    .subscribe((data) => {
+      console.log(data);
+    })
      
      let watch = this.geolocation.watchPosition();
      watch.subscribe((data) => {
@@ -61,15 +66,19 @@ export class HomePage  {
     let headers=new Headers();
     headers.append('Content-Type','application/json');
     let body={
-      lattitude:String(this.lat),
-      longitude:String(this.long),
-      name:String(this.name),
-      message:String(this.message),
-      mobile:String(this.mobile),
-      carnum:String(this.carnum),
+      ID:String(this.carnum),
+      Latitude:String(this.lat),
+      Longitude:String(this.long),
+      Name:String(this.name),
+      Message:String(this.message),
+      PhoneNumber:String(this.mobile),
+      CarNumber:String(this.carnum),
+      //Latitude:"125.32",
+      //Longitude:"120.41",
+      //SearchParameter:"10"
 
     };
-    this.http.post('http://httpbin.org/post',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post(' http://localhost:8000/get_nearby',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
   }
