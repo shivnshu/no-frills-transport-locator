@@ -66,9 +66,9 @@ export class HomePage  {
     let headers=new Headers();
     headers.append('Content-Type','application/json');
     let body={
-      ID:String(this.carnum),
-      Latitude:String(this.lat),
-      Longitude:String(this.long),
+      ID:parseInt(this.carnum),
+      Latitude:this.lat,
+      Longitude:this.long,
       Name:String(this.name),
       Message:String(this.message),
       PhoneNumber:String(this.mobile),
@@ -78,7 +78,7 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
-    this.http.post(' http://localhost:8000/get_nearby',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post('http://localhost:8000/update_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
   }
