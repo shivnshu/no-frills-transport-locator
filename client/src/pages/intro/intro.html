@@ -11,12 +11,7 @@
   </ion-navbar>
 
 </ion-header>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
 <ion-content class="login-background" padding>
 <!--<div class="row">
     <button ion-button clear color="light" LARGE>
@@ -25,36 +20,46 @@
     </button>
 </div>-->
 <h2 style="color:white;">Welcome To QuickCab Services</h2>
-<button ion-button color="light" (click)="openclient()" >
-    <div class="grid-full">
-      <ion-row>
-          <ion-col>
-               <img src="../../assets/imgs/customer.jpeg" height="100">
-            </ion-col>
-        <ion-col>
-          <div class="center-text">
-            Customer
-            </div>
-          
-        </ion-col>
-      </ion-row>
-    </div>
-  </button>
-  <button ion-button color="light" (click)="opendriver()">
+<br>
+  <button ion-button color="dark" (click)="openclient()" class="special">
       <div class="grid-full">
         <ion-row>
             <ion-col>
-                 <img src="../../assets/imgs/driver.png" height="100" >
+                <img src="../../assets/imgs/intro_1.png"  style="width: 100%; height: 100%;">
               </ion-col>
           <ion-col>
             <div class="center-text">
-              Driver
+              Customer
               </div>
             
           </ion-col>
         </ion-row>
       </div>
     </button>
+    <br><br><br>
+    <button ion-button color="dark" (click)="opendriver()" class="special">
+        <div class="grid-full">
+          <ion-row>
+              <ion-col>
+                  <img src="../../assets/imgs/intro_2.jpg" style="width: 100%; height: 100%;" >
+                </ion-col>
+            <ion-col>
+              <div class="center-text">
+                New Driver
+                </div>
+              
+            </ion-col>
+          </ion-row>
+        </div>
+      </button>
+      <br><br>
+      <button ion-button full color="dark" style="margin-top: 20px;" (click)="opendriver()"> Already Regiistered? UPDATE</button>
+      <br><br>
+      <div style="display: flex; justify-content: center;">
+          <img src="../../assets/imgs/taxi.jpg" style="width: 120px; height: 120px;" />
+        </div>
+
+  
 
 
 </ion-content>

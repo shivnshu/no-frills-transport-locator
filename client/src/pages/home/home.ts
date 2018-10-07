@@ -66,7 +66,7 @@ export class HomePage  {
     let headers=new Headers();
     headers.append('Content-Type','application/json');
     let body={
-      ID:parseInt(this.carnum),
+      ID:parseInt(this.mobile),
       Latitude:this.lat,
       Longitude:this.long,
       Name:String(this.name),
@@ -78,7 +78,7 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
-    this.http.post('http://localhost:8000/update_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post(' http://localhost:8000/update_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
   }

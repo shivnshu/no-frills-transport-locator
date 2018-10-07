@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { ClientPage } from '../client/client';
-
+import { Geolocation } from '@ionic-native/geolocation';
 /**
  * Generated class for the IntroPage page.
  *
@@ -17,7 +17,7 @@ import { ClientPage } from '../client/client';
 })
 export class IntroPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation) {
   }
 
   ionViewDidLoad() {

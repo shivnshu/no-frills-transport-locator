@@ -28,14 +28,14 @@ export class ClientPage {
   }
  
   loadmap() {
-    this.map = leaflet.map("map").fitWorld();
+    this.map = leaflet.map("map", { closePopupOnClick: false}).fitWorld();
     leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attributions: 'www.tphangout.com',
-      maxZoom: 18
+      maxZoom: 20
     }).addTo(this.map);
     this.map.locate({
       setView: true,
-      maxZoom: 10
+      maxZoom: 20
     }).on('locationfound', (e) => {
       let markerGroup = leaflet.featureGroup();
       let marker: any = leaflet.marker([e.latitude, e.longitude]).on('click', () => {
@@ -43,6 +43,15 @@ export class ClientPage {
       })
       markerGroup.addLayer(marker);
       this.map.addLayer(markerGroup);
+
+      var popup = leaflet.popup({
+          closeButton: false,
+          autoClose: false
+        })
+        .setLatLng([e.latitude,e.longitude])
+        .setContent('<p>Your Location</p>')
+        .openOn(this.map);
+
       }).on('locationerror', (err) => {
         alert(err.message);
       })
