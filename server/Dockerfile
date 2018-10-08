@@ -4,6 +4,7 @@ ADD . /go
 
 RUN go get github.com/gorilla/mux
 RUN go get gopkg.in/mgo.v2
+RUN go get github.com/rs/cors
 
 RUN go build -o server.out /go/src/server/server.go
 

@@ -19,22 +19,28 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"GetAllLocations",
+		"GetAllTransportsLocations",
 		"GET",
-		"/get_all_locations",
-		controller.GetAllLocations,
+		"/get_all_transports_locations",
+		controller.GetAllTransportsLocations,
 	},
 	Route{
-		"UpdateLocation",
+		"AddNewTransport",
 		"POST",
-		"/update_location",
-		controller.UpdateLocation,
+		"/add_new_transport",
+		controller.AddNewTransport,
 	},
 	Route{
-		"GetNearby",
+		"UpdateTransportLocation",
 		"POST",
-		"/get_nearby",
-		controller.GetNearby,
+		"/update_transport_location",
+		controller.UpdateTransportLocation,
+	},
+	Route{
+		"GetNearbyTransports",
+		"POST",
+		"/get_nearby_transports",
+		controller.GetNearbyTransports,
 	},
 }
 

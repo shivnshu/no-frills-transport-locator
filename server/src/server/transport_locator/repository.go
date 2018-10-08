@@ -15,8 +15,7 @@ const DBName = "transportLocator"
 
 const Collection = "locations"
 
-// Return all locations in db
-func (r Repository) GetAllLocations() transportLocations {
+func (r Repository) GetAllTransportsLocations() transportLocations {
 	session, err := mgo.Dial(SERVER)
 
 	if err != nil {
@@ -29,28 +28,54 @@ func (r Repository) GetAllLocations() transportLocations {
 	results := transportLocations{}
 
 	if err := c.Find(nil).All(&results); err != nil {
-		fmt.Println("Failed to get results: ", err)
+		fmt.Println("Failed to get results of GetAllTransportsLocations:", err)
 	}
 	return results
 }
 
-// Update/Add car location
-func (r Repository) UpdateLocation(location transportLocation) bool {
+func (r Repository) AddNewTransport(location transportLocation) bool {
 	session, err := mgo.Dial(SERVER)
 	defer session.Close()
 
-	_, err = session.DB(DBName).C(Collection).UpsertId(location.ID, location)
-
+	var idLocation interface{}
+	err = session.DB(DBName).C(Collection).FindId(location.ID).One(&idLocation)
+	if err == nil {
+		fmt.Printf("DEBUG: Transport with ID %d already exists.\n", location.ID)
+		return false
+	}
+	err = session.DB(DBName).C(Collection).Insert(location)
 	if err != nil {
 		log.Fatal(err)
 		return false
 	}
 
-	fmt.Println("Updated/added location at id: ", location.ID)
+	fmt.Println("DEBUG: Added new transport location with id:", location.ID)
 	return true
 }
 
-func (r Repository) GetNearBy(userLocation queryLocation) transportLocations {
+func (r Repository) UpdateTransportLocation(location transportLocation) (bool, error) {
+	session, err := mgo.Dial(SERVER)
+	defer session.Close()
+
+	var idLocation interface{}
+	err = session.DB(DBName).C(Collection).FindId(location.ID).One(&idLocation)
+	if err != nil {
+		fmt.Printf("DEBUG: Transport with ID %d do not exist.\n", location.ID)
+		return false, nil
+	}
+
+	err = session.DB(DBName).C(Collection).Update(bson.M{"_id": location.ID}, bson.M{"$set": bson.M{"lat": location.Latitude, "long": location.Longitude, "time_stamp": location.TimeStamp}})
+
+	if err != nil {
+		log.Fatal(err)
+		return false, err
+	}
+
+	fmt.Println("Updated transport location with id:", location.ID)
+	return true, nil
+}
+
+func (r Repository) GetNearByTransports(userLocation queryLocation) transportLocations {
 	session, _ := mgo.Dial(SERVER)
 	defer session.Close()
 
@@ -64,7 +89,10 @@ func (r Repository) GetNearBy(userLocation queryLocation) transportLocations {
 	// fmt.Println("DEBUG: query is ", query)
 
 	results := transportLocations{}
-	_ = session.DB(DBName).C(Collection).Find(query).All(&results)
+	err := session.DB(DBName).C(Collection).Find(query).All(&results)
+	if err != nil {
+		fmt.Println("Failed to get results of GetNearByTransports:", err)
+	}
 
 	// fmt.Println("DEBUG: getNearbyResult ", results)
 	return results
