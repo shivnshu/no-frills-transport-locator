@@ -78,7 +78,7 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
-    this.http.post(' http://localhost:8000/update_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post('http://localhost:8000/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
   }
