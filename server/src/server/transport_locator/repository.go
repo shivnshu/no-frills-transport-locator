@@ -1,7 +1,6 @@
 package transport_locator
 
 import (
-	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
@@ -19,7 +18,7 @@ func (r Repository) GetAllTransportsLocations() transportLocations {
 	session, err := mgo.Dial(SERVER)
 
 	if err != nil {
-		fmt.Println("Failed to establish connection to MongoDB")
+		log.Println("Failed to establish connection to MongoDB")
 	}
 
 	defer session.Close()
@@ -28,7 +27,7 @@ func (r Repository) GetAllTransportsLocations() transportLocations {
 	results := transportLocations{}
 
 	if err := c.Find(nil).All(&results); err != nil {
-		fmt.Println("Failed to get results of GetAllTransportsLocations:", err)
+		log.Println("Failed to get results of GetAllTransportsLocations:", err)
 	}
 	return results
 }
@@ -40,7 +39,7 @@ func (r Repository) AddNewTransport(location transportLocation) bool {
 	var idLocation interface{}
 	err = session.DB(DBName).C(Collection).FindId(location.ID).One(&idLocation)
 	if err == nil {
-		fmt.Printf("DEBUG: Transport with ID %d already exists.\n", location.ID)
+		log.Printf("Transport with ID %d already exists.\n", location.ID)
 		return false
 	}
 	err = session.DB(DBName).C(Collection).Insert(location)
@@ -49,8 +48,29 @@ func (r Repository) AddNewTransport(location transportLocation) bool {
 		return false
 	}
 
-	fmt.Println("DEBUG: Added new transport location with id:", location.ID)
+	log.Println("Added new transport with id:", location.ID)
 	return true
+}
+
+func (r Repository) DeleteTransport(id int64) bool {
+	session, err := mgo.Dial(SERVER)
+	defer session.Close()
+
+	var idLocation interface{}
+	err = session.DB(DBName).C(Collection).FindId(id).One(&idLocation)
+	if err != nil {
+		log.Printf("Transport with ID %d does not exists.\n", id)
+		return false
+	}
+	err = session.DB(DBName).C(Collection).Remove(bson.M{"_id": id})
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+
+	log.Println("Deleted transport with id:", id)
+	return true
+
 }
 
 func (r Repository) UpdateTransportLocation(location transportLocation) (bool, error) {
@@ -60,18 +80,21 @@ func (r Repository) UpdateTransportLocation(location transportLocation) (bool, e
 	var idLocation interface{}
 	err = session.DB(DBName).C(Collection).FindId(location.ID).One(&idLocation)
 	if err != nil {
-		fmt.Printf("DEBUG: Transport with ID %d do not exist.\n", location.ID)
+		log.Printf("Transport with ID %d do not exist.\n", location.ID)
 		return false, nil
 	}
 
-	err = session.DB(DBName).C(Collection).Update(bson.M{"_id": location.ID}, bson.M{"$set": bson.M{"lat": location.Latitude, "long": location.Longitude, "time_stamp": location.TimeStamp}})
+	bsonData, _ := bson.Marshal(location)
+	var bsonMap map[string]interface{}
+	_ = bson.Unmarshal(bsonData, &bsonMap)
+	err = session.DB(DBName).C(Collection).Update(bson.M{"_id": location.ID}, bson.M{"$set": bsonMap})
 
 	if err != nil {
 		log.Fatal(err)
 		return false, err
 	}
 
-	fmt.Println("Updated transport location with id:", location.ID)
+	log.Println("Updated transport location with id:", location.ID)
 	return true, nil
 }
 
@@ -91,7 +114,7 @@ func (r Repository) GetNearByTransports(userLocation queryLocation) transportLoc
 	results := transportLocations{}
 	err := session.DB(DBName).C(Collection).Find(query).All(&results)
 	if err != nil {
-		fmt.Println("Failed to get results of GetNearByTransports:", err)
+		log.Println("Failed to get results of GetNearByTransports:", err)
 	}
 
 	// fmt.Println("DEBUG: getNearbyResult ", results)

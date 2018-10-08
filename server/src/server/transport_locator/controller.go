@@ -56,11 +56,48 @@ func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 	*/
 }
 
+func (c *Controller) DeleteTransport(w http.ResponseWriter, r *http.Request) {
+	log.Println("Called DeleteTransport controller")
+
+	location := transportLocation{}
+
+	err := json.NewDecoder(r.Body).Decode(&location)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	if location.ID == 0 {
+		w.Write([]byte("ID not supplied."))
+		return
+	}
+	res := c.Repository.DeleteTransport(location.ID)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if res {
+		w.Write([]byte("Deletion successful."))
+	} else {
+		w.Write([]byte("Deletion failed. Driver with supplied ID does not exist."))
+	}
+	return
+
+	/*
+		// DEBUG
+		locationJson, err := json.Marshal(location)
+		if err != nil {
+			panic(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(locationJson)
+		return
+	*/
+}
+
 func (c *Controller) UpdateTransportLocation(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called UpdateTransportLocation controller")
 
 	location := transportLocation{}
 
+	location.TimeStamp = time.Now().Unix()
 	err := json.NewDecoder(r.Body).Decode(&location)
 	if err != nil {
 		panic(err)
@@ -70,7 +107,6 @@ func (c *Controller) UpdateTransportLocation(w http.ResponseWriter, r *http.Requ
 		w.Write([]byte("Driver ID not supplied"))
 		return
 	}
-	location.TimeStamp = time.Now().Unix()
 	res, err := c.Repository.UpdateTransportLocation(location)
 	w.WriteHeader(http.StatusOK)
 	if res == false && err == nil {

@@ -31,6 +31,12 @@ var routes = Routes{
 		controller.AddNewTransport,
 	},
 	Route{
+		"DeleteTransport",
+		"POST",
+		"/delete_transport",
+		controller.DeleteTransport,
+	},
+	Route{
 		"UpdateTransportLocation",
 		"POST",
 		"/update_transport_location",
