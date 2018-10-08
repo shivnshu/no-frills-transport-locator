@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Controller struct {
 	Repository Repository
 }
 
-func (c *Controller) GetAllLocations(w http.ResponseWriter, r *http.Request) {
-	log.Println("Called GetAllLocations controller")
-	locations := c.Repository.GetAllLocations()
+func (c *Controller) GetAllTransportsLocations(w http.ResponseWriter, r *http.Request) {
+	log.Println("Called GetAllTransportsLocations controller")
+	locations := c.Repository.GetAllTransportsLocations()
 	data, _ := json.Marshal(locations)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -21,8 +22,8 @@ func (c *Controller) GetAllLocations(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
-	log.Println("Called UpdateLocation controller")
+func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
+	log.Println("Called AddNewTransport controller")
 
 	location := transportLocation{}
 
@@ -30,9 +31,52 @@ func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
-	res := c.Repository.UpdateLocation(location)
+	// Seconds since unix epoch
+	location.TimeStamp = time.Now().Unix()
+	res := c.Repository.AddNewTransport(location)
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	if res {
+		w.Write([]byte("Signup successful."))
+	} else {
+		w.Write([]byte("Signup failed. Try signing in."))
+	}
+	return
+
+	/*
+		// DEBUG
+		locationJson, err := json.Marshal(location)
+		if err != nil {
+			panic(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(locationJson)
+		return
+	*/
+}
+
+func (c *Controller) UpdateTransportLocation(w http.ResponseWriter, r *http.Request) {
+	log.Println("Called UpdateTransportLocation controller")
+
+	location := transportLocation{}
+
+	err := json.NewDecoder(r.Body).Decode(&location)
+	if err != nil {
+		panic(err)
+	}
+	if location.ID == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Driver ID not supplied"))
+		return
+	}
+	location.TimeStamp = time.Now().Unix()
+	res, err := c.Repository.UpdateTransportLocation(location)
+	w.WriteHeader(http.StatusOK)
+	if res == false && err == nil {
+		w.Write([]byte("Driver ID does not exist. Please signup first."))
+		return
+	}
 	if res {
 		w.Write([]byte("Updation successful"))
 	} else {
@@ -54,8 +98,8 @@ func (c *Controller) UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	*/
 }
 
-func (c *Controller) GetNearby(w http.ResponseWriter, r *http.Request) {
-	log.Println("Called GetNearby controller")
+func (c *Controller) GetNearbyTransports(w http.ResponseWriter, r *http.Request) {
+	log.Println("Called GetNearbyTransports controller")
 
 	userLocation := queryLocation{}
 
@@ -64,7 +108,7 @@ func (c *Controller) GetNearby(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	locations := c.Repository.GetNearBy(userLocation)
+	locations := c.Repository.GetNearByTransports(userLocation)
 	data, _ := json.Marshal(locations)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.Header().Set("Access-Control-Allow-Origin", "*")

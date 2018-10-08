@@ -32,15 +32,20 @@
 6. Build using `go build -o server.out server.go`
 
 ## Usage
-* Get all Transports in Database
+* Get all Transports present in Database
 ```
-curl --request GET http://localhost:8000/get_all_locations
+curl --request GET http://localhost:8000/get_all_transports_locations
 ```
-* Update or Add an entry
+* Add a new Transport
 ```
-curl --header "Content-Type: application/json" --request POST --data '{"ID":98, "PhoneNumber":"+12809748", "Latitude": 120.5, "Longitude": 130.34, "Name": "Usage", "CarNumber": "1234", "Message": "i am a demonstration"}' http://localhost:8000/update_location
+curl --header "Content-Type: application/json" --request POST --data '{"ID":98, "PhoneNumber":"+12809748", "Latitude": 120.5, "Longitude": 130.34, "Name": "Usage", "CarNumber": "1234", "Message": "i am a demonstration"}' http://localhost:8000/add_new_transport
 ```
-* Get Nearby Transport
+* Update Transport Location
 ```
-curl --header "Content-Type: application/json" --request POST --data '{"Latitude": 125.32, "Longitude": 120.41, "SearchParameter": 10}' http://localhost:8000/get_nearby
+curl --header "Content-Type: application/json" --request POST --data '{"ID":98, "Latitude": 130.5, "Longitude": 140.34}' http://localhost:8000/update_transport_location
+```
+
+* Get NearbyTransports
+```
+curl --header "Content-Type: application/json" --request POST --data '{"Latitude": 125.32, "Longitude": 120.41, "SearchParameter": 10}' http://localhost:8000/get_nearby_transports
 ```
