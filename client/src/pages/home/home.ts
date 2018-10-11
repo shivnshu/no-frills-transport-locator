@@ -4,6 +4,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { HomeService } from './home.service';
 import {Http,Headers} from '@angular/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Storage } from '@ionic/storage';
 
 
 @Component({
@@ -20,7 +21,7 @@ export class HomePage  {
   carnum:any;
   authForm: FormGroup;
   
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService,private http:Http, public formBuilder: FormBuilder ) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService,private http:Http, public formBuilder: FormBuilder,private storage: Storage ) {
     this.geolocation.getCurrentPosition().then((resp) => {
       //console.log('lat');
       //console.log('long');
@@ -64,11 +65,12 @@ export class HomePage  {
 
   SendLocation(){
     let headers=new Headers();
+    this.storage.set('mobile',this.mobile);
     headers.append('Content-Type','application/json');
     let body={
       ID:parseInt(this.mobile),
-      Latitude:this.lat,
-      Longitude:this.long,
+      Latitude:0.0,
+      Longitude:12.0,
       Name:String(this.name),
       Message:String(this.message),
       PhoneNumber:String(this.mobile),
