@@ -77,7 +77,11 @@ export class ClientPage {
   }
   SendLocation(){
     let headers=new Headers();
-    headers.append('Content-Type','application/json');
+    headers.append('Access-Control-Allow-Origin','*');
+    headers.append('Access-Control-Allow-Headers' , '*');
+    headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT'); 
+    headers.append('Accept','application/json');
+    headers.append('content-type','application/json');
     let body={
       Latitude:this.lat,
       Longitude:this.long,
@@ -88,7 +92,7 @@ export class ClientPage {
       //SearchParameter:"10"
     };
    // console.log(JSON.stringify(body));
-    this.http.post('http://localhost:8000/get_nearby_transports',JSON.stringify(body),{headers:headers}).map(res => res.json()).subscribe(data=>{
+    this.http.post('http://192.168.0.115:8000/get_nearby_transports',JSON.stringify(body),{headers:headers}).map(res => res.json()).subscribe(data=>{
       console.log(data);
     for(var i=0;i<data.length;i++)
     {

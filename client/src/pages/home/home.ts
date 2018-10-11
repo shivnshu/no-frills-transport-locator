@@ -66,7 +66,12 @@ export class HomePage  {
   SendLocation(){
     let headers=new Headers();
     this.storage.set('mobile',this.mobile);
-    headers.append('Content-Type','application/json');
+    headers.append('Access-Control-Allow-Origin','*');
+    headers.append('Access-Control-Allow-Headers' , '*');
+    headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
+    headers.append('Accept','application/json');
+    headers.append('content-type','application/json');
+    //headers.append('Content-Type','application/json');
     let body={
       ID:parseInt(this.mobile),
       Latitude:0.0,
@@ -80,7 +85,7 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
-    this.http.post('http://localhost:8000/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post('http://192.168.0.115:8000/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
   }

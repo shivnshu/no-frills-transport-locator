@@ -8,6 +8,6 @@ export class HomeService{
     }
     
     getData(){
-        return this.httpService.sendGETRequest("http://localhost:8000/get_all_transports_locations")
+        return this.httpService.sendGETRequest("http://192.168.0.115:8000/get_all_transports_locations")
     }
 }

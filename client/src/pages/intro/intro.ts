@@ -59,7 +59,7 @@ export class IntroPage {
           //Longitude:"120.41",
           //SearchParameter:"10"    
         };
-        this.http.post(' http://localhost:8000/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+        this.http.post(' http://192.168.0.115:8000/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
           console.log(data);
         });
 
