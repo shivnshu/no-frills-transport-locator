@@ -24,8 +24,8 @@ export class ClientPage {
   SearchParameter:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder) {
-  this.SearchParameter=10;
-  this.geolocation.getCurrentPosition().then((resp) => {
+  this.SearchParameter=0.1;
+   this.geolocation.getCurrentPosition().then((resp) => {
     //console.log('lat');
     //console.log('long');
     this.lat=resp.coords.latitude;
@@ -56,19 +56,20 @@ export class ClientPage {
       maxZoom: 10
     }).on('locationfound', (e) => {
       let markerGroup = leaflet.featureGroup();
+      
       let marker: any = leaflet.marker([e.latitude, e.longitude]).on('click', () => {
-        alert("latitude:"+e.latitude+" Longitude:"+e.longitude);
+        alert("Your Location");
       })
       markerGroup.addLayer(marker);
       this.map.addLayer(markerGroup);
 
-      var popup = leaflet.popup({
+      /*var popup = leaflet.popup({
           closeButton: false,
           autoClose: false
         })
         .setLatLng([e.latitude,e.longitude])
-        .setContent('<p>Your Location</p>')
-        .openOn(this.map);
+        .setContent('<p>You</p>')
+        .openOn(this.map);*/
 
       }).on('locationerror', (err) => {
         alert(err.message);
@@ -80,30 +81,42 @@ export class ClientPage {
     let body={
       Latitude:this.lat,
       Longitude:this.long,
-      SearchParameter:parseInt(this.SearchParameter)
+      SearchParameter:this.SearchParameter
       
       //Latitude:"125.32",
       //Longitude:"120.41",
       //SearchParameter:"10"
     };
-    this.http.post('http://localhost:8000/get_nearby_transports',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+   // console.log(JSON.stringify(body));
+    this.http.post('http://localhost:8000/get_nearby_transports',JSON.stringify(body),{headers:headers}).map(res => res.json()).subscribe(data=>{
       console.log(data);
-    });
-    let markerGroup = leaflet.featureGroup();
-      let marker: any = leaflet.marker([this.lat, this.long]).on('click', () => {
-        alert("latitude:"+this.lat+" Longitude:"+this.long);
-      })
+    for(var i=0;i<data.length;i++)
+    {
+      let markerGroup = leaflet.featureGroup();
+      /*var long=data[i].Longitude;
+      var lat=data[i].Latitude;
+      var name=data[i].Name;
+      var carnum=data[i].CarNumber;
+      var mes=data[i].Message;
+      var mobile=data[i].PhoneNumber;
+      var ts=data[i].TimeStamp;*/
+      let marker: any = leaflet.marker([data[i].Latitude,data[i].Longitude]).bindPopup("Latitude="+data[i].Latitude+"<br>Longitude="+data[i].Longitude+"<br>Last Seen="+data[i].TimeStamp+"<br>Name="+data[i].Name+"<br>Carnum="+data[i].CarNumber+"<br>mobile="+data[i].PhoneNumber+"<br><b>SpecialMessage=</b>"+data[i].Message);                       
       markerGroup.addLayer(marker);
       this.map.addLayer(markerGroup);
 
-      var popup = leaflet.popup({
+      /*var popup = leaflet.popup({
           closeButton: false,
           autoClose: false
         })
-        .setLatLng([this.lat,this.long])
+        .setLatLng([data[i].Latitude,data[i].Latitude])
         .setContent('<p>Driver 1</p>')
-        .openOn(this.map);
+        .openOn(this.map);*/
+      
+    }
+     
 
+    });
+    
       
   }
 
