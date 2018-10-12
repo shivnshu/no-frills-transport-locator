@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ClientPage } from '../pages/client/client';
+import { SettingsPage } from '../pages/settings/settings';
 import { IntroPage } from '../pages/intro/intro';
 import { Geolocation } from '@ionic-native/geolocation';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,7 +23,8 @@ import { IonicStorageModule } from '@ionic/storage';
     MyApp,
     HomePage,
     IntroPage,
-    ClientPage
+    ClientPage,
+    SettingsPage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { IonicStorageModule } from '@ionic/storage';
     MyApp,
     IntroPage,
     HomePage,
-    ClientPage
+    ClientPage,
+    SettingsPage
   ],
   providers: [
     StatusBar,

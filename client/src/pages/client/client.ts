@@ -4,6 +4,7 @@ import leaflet from 'leaflet';
 import {Http,Headers} from '@angular/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Storage } from '@ionic/storage';
 /**
  * Generated class for the ClientPage page.
  *
@@ -23,7 +24,7 @@ export class ClientPage {
   long:any;
   SearchParameter:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder,private storage: Storage) {
   this.SearchParameter=0.1;
    this.geolocation.getCurrentPosition().then((resp) => {
     //console.log('lat');
@@ -79,6 +80,7 @@ export class ClientPage {
     let headers=new Headers();
     headers.append('Access-Control-Allow-Origin','*');
     headers.append('Access-Control-Allow-Headers' , '*');
+    headers.append('Access-Control-Allow-Credentials','*');
     headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT'); 
     headers.append('Accept','application/json');
     headers.append('content-type','application/json');
@@ -92,7 +94,12 @@ export class ClientPage {
       //SearchParameter:"10"
     };
    // console.log(JSON.stringify(body));
-    this.http.post('http://192.168.0.115:8000/get_nearby_transports',JSON.stringify(body),{headers:headers}).map(res => res.json()).subscribe(data=>{
+   this.storage.get('port').then((val) => {
+    this.storage.get('ip').then((val1) => {
+      console.log(val);
+      console.log(val1);
+      console.log('http://'+val1+':'+val+'/get_nearby_transports');
+    this.http.post('http://'+val1+':'+val+'/get_nearby_transports',JSON.stringify(body),{headers:headers}).map(res => res.json()).subscribe(data=>{
       console.log(data);
     for(var i=0;i<data.length;i++)
     {
@@ -114,9 +121,10 @@ export class ClientPage {
         })
         .setLatLng([data[i].Latitude,data[i].Latitude])
         .setContent('<p>Driver 1</p>')
-        .openOn(this.map);*/
-      
+        .openOn(this.map);*/      
     }
+  });
+});
      
 
     });

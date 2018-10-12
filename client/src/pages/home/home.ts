@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { Storage } from '@ionic/storage';
 
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -31,10 +32,6 @@ export class HomePage  {
        console.log('Error getting location', error);
      });
 
-     this.homeService.getData()
-    .subscribe((data) => {
-      console.log(data);
-    })
      
      let watch = this.geolocation.watchPosition();
      watch.subscribe((data) => {
@@ -69,9 +66,11 @@ export class HomePage  {
     headers.append('Access-Control-Allow-Origin','*');
     headers.append('Access-Control-Allow-Headers' , '*');
     headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
+    headers.append('Access-Control-Allow-Credentials','*');
     headers.append('Accept','application/json');
     headers.append('content-type','application/json');
-    //headers.append('Content-Type','application/json');
+    this.storage.get('port').then((val) => {
+      this.storage.get('ip').then((val1) => {
     let body={
       ID:parseInt(this.mobile),
       Latitude:0.0,
@@ -85,9 +84,12 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
-    this.http.post('http://192.168.0.115:8000/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+    this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       console.log(data);
     });
+  
+  });
+  });
   }
 
   onSubmit(value: any): void { 
