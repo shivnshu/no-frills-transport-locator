@@ -43,6 +43,7 @@ export class SettingsPage {
         this.serverPort=value.port;
         this.storage.set('port',this.serverPort);
         this.storage.set('ip',this.serverIp);
+        alert("Server Settings updated");
 
     }
 }  

@@ -6,6 +6,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
 import {Http,Headers} from '@angular/http';
 import { SettingsPage } from '../settings/settings';
+import { AlertController } from 'ionic-angular';
 /**
  * Generated class for the IntroPage page.
  *
@@ -21,7 +22,9 @@ import { SettingsPage } from '../settings/settings';
 export class IntroPage {
   lat;
   long;
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private storage: Storage,private http:Http) {
+  testRadioOpen: boolean;
+  testRadioResult;
+  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private storage: Storage,private http:Http,public alertCtrl: AlertController) {
     this.geolocation.getCurrentPosition().then((resp) => {
       //console.log('lat');
       //console.log('long');
@@ -48,12 +51,13 @@ export class IntroPage {
   }
   update(){
    // this.storage.remove('mobile');
-    this.storage.get('mobile').then((val) => {
-      if(!val)
+    this.storage.get('mobile').then((value) => {
+      if(!value)
       {
         alert("You are not regisered yet");
       }
       else{
+        console.log(value);
         let headers=new Headers();   
         headers.append('Access-Control-Allow-Origin','*');
         headers.append('Access-Control-Allow-Headers' , '*');
@@ -64,17 +68,69 @@ export class IntroPage {
         
         this.storage.get('port').then((val) => {
           this.storage.get('ip').then((val1) => {
-        let body={
-          ID:parseInt(val),
-          Latitude:this.lat,
-          Longitude:this.long,
-          //Latitude:"125.32",
-          //Longitude:"120.41",
-          //SearchParameter:"10"    
-        };
-        this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
-          console.log(data);
-        });
+        
+            let alert = this.alertCtrl.create();
+            alert.setTitle('Which planets have you visited?');
+        
+            alert.addInput({
+              type: 'radio',
+              label: 'I am Available',
+              value: 'I am Available',
+              checked: true
+            });
+        
+            alert.addInput({
+              type: 'radio',
+              label: 'I am busy.Sorry.',
+              value: 'I am busy.Sorry.'
+            });
+        
+            alert.addInput({
+              type: 'radio',
+              label: 'I am available late night.',
+              value: 'I am available late night.'
+            });
+        
+            alert.addInput({
+              type: 'radio',
+              label: 'I do not work late night',
+              value: 'I do not work late night'
+            });
+        
+            alert.addInput({
+              type: 'radio',
+              label: 'I would be back Soon',
+              value: 'I would be back Soon'
+            });
+        
+        
+            alert.addButton('Cancel');
+            alert.addButton({
+              text: 'Okay',
+              handler: data => {
+                console.log('Checkbox data:', data);
+                this.testRadioOpen = false;
+                this.testRadioResult = data;
+                let body={
+                  ID:parseInt(value),
+                  Latitude:this.lat,
+                  Longitude:this.long,
+                  Message: String(data)
+                     
+                };
+                console.log(body);
+                this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+                 
+                console.log(data);       
+                });
+              }
+            });
+            alert.present().then(() => {
+              this.testRadioOpen = true;             
+
+            });
+
+        
       });
     });
 

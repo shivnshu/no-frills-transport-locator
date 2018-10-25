@@ -62,7 +62,6 @@ export class HomePage  {
 
   SendLocation(){
     let headers=new Headers();
-    this.storage.set('mobile',this.mobile);
     headers.append('Access-Control-Allow-Origin','*');
     headers.append('Access-Control-Allow-Headers' , '*');
     headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
@@ -73,8 +72,8 @@ export class HomePage  {
       this.storage.get('ip').then((val1) => {
     let body={
       ID:parseInt(this.mobile),
-      Latitude:0.0,
-      Longitude:12.0,
+      Latitude:this.lat,
+      Longitude:this.long,
       Name:String(this.name),
       Message:String(this.message),
       PhoneNumber:String(this.mobile),
@@ -85,7 +84,16 @@ export class HomePage  {
 
     };
     this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
-      console.log(data);
+      var content=String(data.text());
+      var matched="Signup failed. Try signing in."; 
+      if(content==matched){
+        alert("Already registered!");
+      }
+      else{
+        this.storage.set('mobile',this.mobile);
+        alert("Successfully registed!");
+      }      
+
     });
   
   });
