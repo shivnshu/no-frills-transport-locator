@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import leaflet from 'leaflet';
 import {Http,Headers} from '@angular/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
@@ -23,9 +23,11 @@ export class ClientPage {
   lat: any;
   long:any;
   SearchParameter:any;
+  loading;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder,private storage: Storage) {
-  this.SearchParameter=0.1;
+  constructor(private loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder,private storage: Storage) {
+    this.presentLoading();
+    this.SearchParameter=0.1;
    this.geolocation.getCurrentPosition().then((resp) => {
     //console.log('lat');
     //console.log('long');
@@ -45,6 +47,14 @@ export class ClientPage {
   ionViewDidEnter() {
     this.loadmap();
   }
+
+  presentLoading() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Loading map...'
+    });
+
+    this.loading.present();
+  }
  
   loadmap() {
     this.map = leaflet.map("map", { closePopupOnClick: false}).fitWorld();
@@ -57,6 +67,7 @@ export class ClientPage {
       maxZoom: 10
     }).on('locationfound', (e) => {
       let markerGroup = leaflet.featureGroup();
+      this.loading.dismiss(); //Stop showing the loading spinner once the map is loaded.
       
       let marker: any = leaflet.marker([e.latitude, e.longitude]).on('click', () => {
         alert("Your Location");

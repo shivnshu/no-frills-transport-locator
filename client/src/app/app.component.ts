@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { IntroPage } from '../pages/intro/intro';
+import { Geolocation } from '@ionic-native/geolocation';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -12,12 +14,13 @@ import { IntroPage } from '../pages/intro/intro';
 export class MyApp {
   rootPage:any = IntroPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen,private gl: Geolocation) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      
     });
   }
 }
