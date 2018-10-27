@@ -23,7 +23,7 @@ export class ClientPage {
   lat: any;
   long:any;
   SearchParameter:any;
-  //loading;
+  loading;
 
   constructor(private loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder,private storage: Storage) {
     //this.presentLoading();
@@ -48,16 +48,16 @@ export class ClientPage {
     this.loadmap();
   }
 
-  /*
+  
   presentLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Loading map...'
     });
 
-    this.loading.present()  }*/
+    this.loading.present()  }
  
   loadmap() {
-    this.map = leaflet.map("map", { closePopupOnClick: false}).fitWorld();
+    this.map = leaflet.map("map", { closePopupOnClick: false,enableHighAccuracy:false,timeout:60000,maximumAge:Infinity}).fitWorld();
     leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attributions: 'www.tphangout.com',
       maxZoom: 18
