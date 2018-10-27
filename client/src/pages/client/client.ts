@@ -23,10 +23,10 @@ export class ClientPage {
   lat: any;
   long:any;
   SearchParameter:any;
-  loading;
+  //loading;
 
   constructor(private loadingCtrl: LoadingController, public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private http:Http, public formBuilder: FormBuilder,private storage: Storage) {
-    this.presentLoading();
+    //this.presentLoading();
     this.SearchParameter=0.1;
    this.geolocation.getCurrentPosition().then((resp) => {
     //console.log('lat');
@@ -48,13 +48,13 @@ export class ClientPage {
     this.loadmap();
   }
 
+  /*
   presentLoading() {
     this.loading = this.loadingCtrl.create({
       content: 'Loading map...'
     });
 
-    this.loading.present();
-  }
+    this.loading.present()  }*/
  
   loadmap() {
     this.map = leaflet.map("map", { closePopupOnClick: false}).fitWorld();
@@ -67,7 +67,7 @@ export class ClientPage {
       maxZoom: 10
     }).on('locationfound', (e) => {
       let markerGroup = leaflet.featureGroup();
-      this.loading.dismiss(); //Stop showing the loading spinner once the map is loaded.
+      //this.loading.dismiss(); //Stop showing the loading spinner once the map is loaded.
       
       let marker: any = leaflet.marker([e.latitude, e.longitude]).on('click', () => {
         alert("Your Location");
