@@ -5,69 +5,58 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar align-title="center">
-    <ion-title>QuickCab</ion-title>
+    <div class="heading">
+    <ion-title>
+      <img src="../../assets/imgs/test.png" style="width:23%; padding-top:1%;">
+    </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="opensettings()" icon-end>
+      <button id="setting" ion-button (click)="opensettings()" icon-end>
         <ion-icon name="settings"></ion-icon>
-        Settings
       </button>
       </ion-buttons>
+      </div>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content class="login-background" padding>
-<!--<div class="row">
-    <button ion-button clear color="light" LARGE>
-    <ion-icon name="key"></ion-icon>
-    Driver
-    </button>
-</div>-->
-<h2 style="color:white;">Welcome To QuickCab Services</h2>
-<br>
-  <button ion-button color="dark" (click)="openclient()" class="special">
+  <button ion-button color="btn" (click)="openclient()" class="special">
       <div class="grid-full">
         <ion-row>
             <ion-col>
-                <img src="../../assets/imgs/intro_1.png"  style="width: 100%; height: 100%;">
+                <img src="../../assets/imgs/ride.jpg"  style="width: 100%; height: 100%;">
               </ion-col>
           <ion-col>
             <div class="center-text">
-              Customer
+              Get a Ride
               </div>
-            
+
           </ion-col>
         </ion-row>
       </div>
     </button>
-    <br><br><br>
-    <button ion-button color="dark" (click)="opendriver()" class="special">
+  <br><br><br>
+    <img src="../../assets/imgs/taxi.jpg" style="width: 65%; margin-left: 15%; height: 20%;">
+    <br><br>
+    <button ion-button color="btn" (click)="opendriver()" class="special">
         <div class="grid-full">
           <ion-row>
               <ion-col>
-                  <img src="../../assets/imgs/intro_2.jpg" style="width: 100%; height: 100%;" >
+                  <img src="../../assets/imgs/drive.jpg" style="width: 100%; height: 100%;" >
                 </ion-col>
             <ion-col>
               <div class="center-text">
-                New Driver
+                Sign Up <br>to Drive
                 </div>
-              
+
             </ion-col>
           </ion-row>
         </div>
       </button>
+      <br><br><br><br>
+      <button ion-button full color="btn" style="margin-top: 20px; color: black;" (click)="update()"> Already Regiistered? UPDATE</button>
       <br><br>
-      <button ion-button full color="dark" style="margin-top: 20px;" (click)="update()"> Already Regiistered? UPDATE</button>
-      <br><br>
-      <div style="display: flex; justify-content: center;">
-          <img src="../../assets/imgs/taxi.jpg" style="width: 120px; height: 120px;" />
-        </div>
-
-  
-
-
+      <!-- <div style="display: flex; justify-content: center;">
+          <img src="../../assets/imgs/taxi1.jpg" style="width: 120px; height: 120px;" />
+        </div> -->
 </ion-content>
-
-

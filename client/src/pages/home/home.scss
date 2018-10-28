@@ -1,10 +1,20 @@
 page-home {
+  .heading{
+    background-color: color($colors, btn, base);
+    height: 45px;
+   }
     .login-background {
-        background: url("../../assets/imgs/start.jpeg") no-repeat fixed center;
-        background-size: cover;     
-         
-      }   
-     
+        background: url("../../assets/imgs/driver.jpg") no-repeat fixed center;
+        background-size: cover;
+      }
+
+      .form{
+        border: 3px solid black;
+        width: 75%;
+        margin-left: 12.5%;
+        margin-top: 5%;
+        opacity: 0.7;
+      }
       .center-text {
         text-align: bottom;
         font-size: 5vw;
@@ -13,6 +23,6 @@ page-home {
         margin-top:30px;
         margin-bottom: 10px;
       }
-      
-     
+
+
 }
