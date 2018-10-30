@@ -7,25 +7,31 @@
 <ion-header>
 
   <ion-navbar align-title="center">
-    <ion-title>QuickCab</ion-title>
+    <div class="heading">
+    <ion-title>
+      <img src="../../assets/imgs/test.png" style="width:23%; padding-top:1%;">
+    </ion-title>
+  </div>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content class="login-background" padding>
-<form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)">
+<form [formGroup]="authForm" (ngSubmit)="onSubmit(authForm.value)" class="form">
   <ion-item [ngClass]="{'error-border':!authForm.controls.ip.valid && authForm.controls.ip.touched}">
-      <ion-label floating>ServerIp</ion-label>
+      <ion-label floating><span style="color: black">Server Ip</span></ion-label>
       <ion-input formControlName="ip" type="text"></ion-input>
   </ion-item>
    <ion-item [ngClass]="{'error-border':!authForm.controls.port.valid && authForm.controls.port.touched}">
-      <ion-label floating>ServerPort</ion-label>
+      <ion-label floating><span style="color: black">Server Port</span></ion-label>
       <ion-input formControlName="port" type="text"></ion-input>
   </ion-item>
-  
 
-  <button ion-button full color="dark" [disabled]="!authForm.valid" style="margin-top: 20px;" type="submit"> Update Server Settings</button>        
+
+  <button ion-button round color="btn" [disabled]="!authForm.valid" style="opacity:1; margin-top: 20px; margin-left: 5%; margin-bottom: 5%;" type="submit">
+    <span style="color: black;"> Update Server Settings</span>
+  </button>
 </form>
 
 </ion-content>

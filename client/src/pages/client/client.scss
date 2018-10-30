@@ -1,27 +1,40 @@
 page-client {
-    .login-background {
-        background: url("../../assets/imgs/client.jpg") no-repeat fixed center;
-        background-size:cover;
-         
-      } 
-        .custom-popup .leaflet-popup-content-wrapper {
-        background:#2c3e50;
-        color:#fff;
-        font-size:16px;
-        line-height:24px;
-        border-radius: 0px;
-        }
-        .custom-popup .leaflet-popup-content-wrapper a {
-        color:rgba(255,255,255,0.1);
-        }
-        .custom-popup .leaflet-popup-tip-container {
-        width:2px;
-        height:5px;
-        }
-        .custom-popup .leaflet-popup-tip {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        }
+  .login-background {
+    background: url("../../assets/imgs/road.jpg") no-repeat fixed center;
+    background-size:cover;
+  }
+
+  .heading{
+    background-color: color($colors, btn, base);
+    height: 45px;
+  }
+
+  #taxi{
+    height: 20%;
+    background-color: btn;
+    margin-top: 5%;
+    width: 60%;
+    margin-left: 15%;
+    opacity: 0.8;
+  }
+  .custom-popup .leaflet-popup-content-wrapper {
+    background:#2c3e50;
+    color:#fff;
+    font-size:16px;
+    line-height:24px;
+    border-radius: 0px;
+  }
+  .custom-popup .leaflet-popup-content-wrapper a {
+    color:rgba(255,255,255,0.1);
+  }
+  .custom-popup .leaflet-popup-tip-container {
+    width:2px;
+    height:5px;
+  }
+  .custom-popup .leaflet-popup-tip {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
 
 }
