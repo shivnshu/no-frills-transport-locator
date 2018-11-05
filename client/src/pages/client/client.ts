@@ -5,6 +5,7 @@ import {Http,Headers} from '@angular/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Storage } from '@ionic/storage';
+import Encrypt from 'jsencrypt';
 /**
  * Generated class for the ClientPage page.
  *
@@ -87,6 +88,14 @@ export class ClientPage {
         alert(err.message);
       })
   }
+ 
+calculateDistance(lat1:number,lat2:number,long1:number,long2:number){
+    let p = 0.017453292519943295;    // Math.PI / 180
+    let c = Math.cos;
+    let a = 0.5 - c((lat1-lat2) * p) / 2 + c(lat2 * p) *c((lat1) * p) * (1 - c(((long1- long2) * p))) / 2;
+    let dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
+    return dis;
+  }
   SendLocation(){
     let headers=new Headers();
     headers.append('Access-Control-Allow-Origin','*');
@@ -125,7 +134,8 @@ export class ClientPage {
       var d=new Date(0);
       var e=d.setUTCSeconds(data[i].TimeStamp);
       var f=d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()+'  '+d.getHours()+':'+d.getMinutes();
-      let marker: any = leaflet.marker([data[i].Latitude,data[i].Longitude]).bindPopup("Latitude="+data[i].Latitude+"<br>Longitude="+data[i].Longitude+"<br>Last Seen="+f+"<br>Name="+data[i].Name+"<br>Carnum="+data[i].CarNumber+"<br>mobile="+data[i].PhoneNumber+"<br><b>SpecialMessage=</b>"+data[i].Message);                       
+      var distance=this.calculateDistance(this.lat,data[i].Latitude,this.long,data[i].Longitude);
+      let marker: any = leaflet.marker([data[i].Latitude,data[i].Longitude]).bindPopup("<b>Distance</b>="+distance.toFixed(2)+"km"+"<br><b>Last Seen=</b>"+f+"<br><b>Name=</b>"+data[i].Name+"<br><b>Carnum=</b>"+data[i].CarNumber+"<br><b>mobile=</b>"+data[i].PhoneNumber+"<br><b>SpecialMessage=</b>"+data[i].Message);                       
       markerGroup.addLayer(marker);
       this.map.addLayer(markerGroup);
 

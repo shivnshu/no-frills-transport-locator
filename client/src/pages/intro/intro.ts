@@ -7,6 +7,9 @@ import { Storage } from '@ionic/storage';
 import {Http,Headers} from '@angular/http';
 import { SettingsPage } from '../settings/settings';
 import { AlertController } from 'ionic-angular';
+import {Injectable} from '@angular/core';
+import keypair from 'keypair';
+import crypto2 from 'crypto2';
 /**
  * Generated class for the IntroPage page.
  *
@@ -40,7 +43,16 @@ export class IntroPage {
     console.log('ionViewDidLoad IntroPage');
   }
   opendriver(){
+    
+    //var keypair = require('../../assets/js/keypair/index.js');
+    /*var pair = keypair();
+    console.log(pair.private);
+    console.log(pair.public);*/
+    
+    
     this.navCtrl.push(HomePage);
+
+    
   }
   openclient(){
     this.navCtrl.push(ClientPage);

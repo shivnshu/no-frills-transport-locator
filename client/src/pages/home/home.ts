@@ -5,7 +5,9 @@ import { HomeService } from './home.service';
 import {Http,Headers} from '@angular/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
-
+import crypto2 from 'crypto2';
+import 'rxjs/add/operator/map';
+import { Injectable } from '@angular/core';
 
 
 @Component({
@@ -83,6 +85,19 @@ export class HomePage  {
       //SearchParameter:"10"
 
     };
+    var st= JSON.stringify(body);
+    console.log(st); 
+    crypto2.createKeyPair().then(({ privateKey, publicKey })=>{
+      console.log(privateKey);
+      crypto2.encrypt.rsa('the native web', publicKey).then((encrypted)=>{
+        //alert(encrypted);
+        crypto2.decrypt.rsa(encrypted, privateKey).then((decrypted)=>{
+          console.log(decrypted);
+        });
+      });     
+      
+    });
+
     this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
       var content=String(data.text());
       var matched="Signup failed. Try signing in."; 
@@ -98,6 +113,7 @@ export class HomePage  {
   
   });
   });
+
   }
 
   onSubmit(value: any): void { 
