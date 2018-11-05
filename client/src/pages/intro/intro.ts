@@ -10,6 +10,7 @@ import { AlertController } from 'ionic-angular';
 import {Injectable} from '@angular/core';
 import keypair from 'keypair';
 import crypto2 from 'crypto2';
+
 /**
  * Generated class for the IntroPage page.
  *
@@ -120,7 +121,7 @@ export class IntroPage {
             alert.addButton({
               text: 'Okay',
               handler: data => {
-                console.log('Checkbox data:', data);
+                //console.log('Checkbox data:', data);
                 this.testRadioOpen = false;
                 this.testRadioResult = data;
                 let body={
@@ -130,11 +131,28 @@ export class IntroPage {
                   Message: String(data)
 
                 };
-                console.log(body);
-                this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+                // console.log(body);
+                // this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
 
-                console.log(data);
+                // console.log(data);
+
+                this.storage.get('key').then((publicKey) => {
+                  var st= JSON.stringify(body);
+                  crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
+                    let dat={
+                      PhoneNumber:parseInt(value),            
+                      Data:encrypted,
+                    };
+                    console.log(dat);
+                    this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
+                 
+                      console.log(data);       
+                      });
+
+                  });
                 });
+               
+                
               }
             });
             alert.present().then(() => {

@@ -117,7 +117,8 @@ export class HomePage  {
             Data:encrypted,
             PublicKey:publicKey,
           };
-
+          
+          // console.log(dat);
 
           this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
             var content=String(data.text());
@@ -127,6 +128,7 @@ export class HomePage  {
             }
             else{
               this.storage.set('mobile',this.mobile);
+              this.storage.set('key',publicKey);
               alert("Successfully registed!");
             }
 
