@@ -72,44 +72,54 @@ export class HomePage  {
     headers.append('content-type','application/json');
     this.storage.get('port').then((val) => {
       this.storage.get('ip').then((val1) => {
-    let body={
-      ID:parseInt(this.mobile),
-      Latitude:this.lat,
-      Longitude:this.long,
-      Name:String(this.name),
-      Message:String(this.message),
-      PhoneNumber:String(this.mobile),
-      CarNumber:String(this.carnum),
-      //Latitude:"125.32",
-      //Longitude:"120.41",
-      //SearchParameter:"10"
-
-    };
-    var st= JSON.stringify(body);
-    console.log(st); 
+    
+    //console.log(st); 
     crypto2.createKeyPair().then(({ privateKey, publicKey })=>{
-      console.log(privateKey);
-      crypto2.encrypt.rsa('the native web', publicKey).then((encrypted)=>{
+      //console.log(privateKey);
+      let body={
+        ID:parseInt(this.mobile),
+        Latitude:this.lat,
+        Longitude:this.long,
+        Name:String(this.name),
+        Message:String(this.message),
+        PhoneNumber:String(this.mobile),
+        CarNumber:String(this.carnum),
+        PrivateKey:privateKey
+        //Latitude:"125.32",
+        //Longitude:"120.41",
+        //SearchParameter:"10"
+  
+      };
+      var st= JSON.stringify(body);
+      crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
         //alert(encrypted);
-        crypto2.decrypt.rsa(encrypted, privateKey).then((decrypted)=>{
-          console.log(decrypted);
+        
+          let dat={
+            PhoneNumber:parseInt(this.mobile),            
+            Data:encrypted,
+          };
+          
+
+          this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
+            var content=String(data.text());
+            var matched="Signup failed. Try signing in."; 
+            if(content==matched){
+              alert("Already registered!");
+            }
+            else{
+              this.storage.set('mobile',this.mobile);
+              alert("Successfully registed!");
+            }      
+      
+          
+          
         });
       });     
       
     });
 
-    this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
-      var content=String(data.text());
-      var matched="Signup failed. Try signing in."; 
-      if(content==matched){
-        alert("Already registered!");
-      }
-      else{
-        this.storage.set('mobile',this.mobile);
-        alert("Successfully registed!");
-      }      
-
-    });
+   
+    
   
   });
   });
