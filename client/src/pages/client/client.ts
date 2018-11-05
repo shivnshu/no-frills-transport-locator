@@ -122,7 +122,10 @@ export class ClientPage {
       var mes=data[i].Message;
       var mobile=data[i].PhoneNumber;
       var ts=data[i].TimeStamp;*/
-      let marker: any = leaflet.marker([data[i].Latitude,data[i].Longitude]).bindPopup("Latitude="+data[i].Latitude+"<br>Longitude="+data[i].Longitude+"<br>Last Seen="+data[i].TimeStamp+"<br>Name="+data[i].Name+"<br>Carnum="+data[i].CarNumber+"<br>mobile="+data[i].PhoneNumber+"<br><b>SpecialMessage=</b>"+data[i].Message);                       
+      var d=new Date(0);
+      var e=d.setUTCSeconds(data[i].TimeStamp);
+      var f=d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()+'  '+d.getHours()+':'+d.getMinutes();
+      let marker: any = leaflet.marker([data[i].Latitude,data[i].Longitude]).bindPopup("Latitude="+data[i].Latitude+"<br>Longitude="+data[i].Longitude+"<br>Last Seen="+f+"<br>Name="+data[i].Name+"<br>Carnum="+data[i].CarNumber+"<br>mobile="+data[i].PhoneNumber+"<br><b>SpecialMessage=</b>"+data[i].Message);                       
       markerGroup.addLayer(marker);
       this.map.addLayer(markerGroup);
 
