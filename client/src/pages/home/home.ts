@@ -23,7 +23,7 @@ export class HomePage  {
   mobile:any;
   carnum:any;
   authForm: FormGroup;
-  
+
   constructor(public navCtrl: NavController, public navParams: NavParams,private geolocation: Geolocation,private homeService: HomeService,private http:Http, public formBuilder: FormBuilder,private storage: Storage ) {
     this.geolocation.getCurrentPosition().then((resp) => {
       //console.log('lat');
@@ -34,16 +34,16 @@ export class HomePage  {
        console.log('Error getting location', error);
      });
 
-     
+
      let watch = this.geolocation.watchPosition();
      watch.subscribe((data) => {
       // data can be a set of coordinates, or an error (if an error occurred).
       // data.coords.latitude
       // data.coords.longitude
-     });   
-     
+     });
+
      this.navCtrl = navCtrl;
- 
+
         this.authForm = formBuilder.group({
             username: ['', Validators.compose([Validators.required, Validators.pattern('[a-z A-Z]*')])],
             password: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]*'),Validators.minLength(10), Validators.maxLength(10)])],
@@ -51,15 +51,15 @@ export class HomePage  {
             mess: ['', Validators.compose([])]
         });
 
-        
-    
+
+
   }
 
-  
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RocketsPage');
-   
+
   }
 
   SendLocation(){
@@ -72,8 +72,8 @@ export class HomePage  {
     headers.append('content-type','application/json');
     this.storage.get('port').then((val) => {
       this.storage.get('ip').then((val1) => {
-    
-    //console.log(st); 
+
+    //console.log(st);
     crypto2.createKeyPair().then(({ privateKey, publicKey })=>{
       //console.log(privateKey);
       let body={
@@ -84,49 +84,68 @@ export class HomePage  {
         Message:String(this.message),
         PhoneNumber:String(this.mobile),
         CarNumber:String(this.carnum),
-        PrivateKey:privateKey
+        PublicKey:publicKey
         //Latitude:"125.32",
         //Longitude:"120.41",
         //SearchParameter:"10"
-  
+
       };
+        // console.log(publicKey)
+        // console.log(privateKey)
+
+        this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
+            var content=String(data.text());
+            var matched="Signup failed. Try signing in.";
+            if(content==matched){
+                alert("Already registered!");
+            }
+            else{
+                this.storage.set('mobile',this.mobile);
+                alert("Successfully registed!");
+            }
+
+
+
+        });
+        /*
       var st= JSON.stringify(body);
-      crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
+      crypto2.encrypt.rsa(st, privateKey).then((encrypted)=>{
         //alert(encrypted);
-        
+
           let dat={
-            PhoneNumber:parseInt(this.mobile),            
+            PhoneNumber:parseInt(this.mobile),
             Data:encrypted,
+            PublicKey:publicKey,
           };
-          
+
 
           this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
             var content=String(data.text());
-            var matched="Signup failed. Try signing in."; 
+            var matched="Signup failed. Try signing in.";
             if(content==matched){
               alert("Already registered!");
             }
             else{
               this.storage.set('mobile',this.mobile);
               alert("Successfully registed!");
-            }      
-      
-          
-          
+            }
+
+
+
         });
-      });     
-      
+      });
+*/
     });
 
-   
-    
-  
+
+
+
   });
   });
 
   }
 
-  onSubmit(value: any): void { 
+  onSubmit(value: any): void {
     if(this.authForm.valid) {
         /*window.localStorage.setItem('username', value.username);
         window.localStorage.setItem('password', value.password);
@@ -139,9 +158,9 @@ export class HomePage  {
 
         this.SendLocation();
     }
-}   
-  
- 
+}
+
+
 
 
 }

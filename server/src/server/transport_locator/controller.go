@@ -1,7 +1,10 @@
 package transport_locator
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"log"
 	"net/http"
 	"time"
@@ -9,6 +12,20 @@ import (
 
 type Controller struct {
 	Repository Repository
+}
+
+func extractPublicKey(key string) *rsa.PublicKey {
+	block, _ := pem.Decode([]byte(key))
+	if block == nil {
+		log.Println("Error reading key")
+	}
+	parsedData, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		log.Println("Could not decode public key")
+		panic(err)
+	}
+	publicKey := parsedData.(*rsa.PublicKey)
+	return publicKey
 }
 
 func (c *Controller) GetAllTransportsLocations(w http.ResponseWriter, r *http.Request) {
@@ -25,12 +42,18 @@ func (c *Controller) GetAllTransportsLocations(w http.ResponseWriter, r *http.Re
 func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called AddNewTransport controller")
 
-	location := transportLocation{}
+	var location transportLocation
+	var publicKey *rsa.PublicKey
 
 	err := json.NewDecoder(r.Body).Decode(&location)
 	if err != nil {
 		panic(err)
 	}
+
+	// publicKey = extractPublicKey(location.PublicKey)
+	// log.Println(publicKey)
+	c.Repository.addUpdatePublicKey(location.PhoneNumber, location.PublicKey)
+
 	// Seconds since unix epoch
 	location.TimeStamp = time.Now().Unix()
 	res := c.Repository.AddNewTransport(location)

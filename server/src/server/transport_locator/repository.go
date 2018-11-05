@@ -14,6 +14,8 @@ const DBName = "transportLocator"
 
 const Collection = "locations"
 
+const publicKeyCollection = "public_keys"
+
 func (r Repository) GetAllTransportsLocations() transportLocations {
 	session, err := mgo.Dial(SERVER)
 
@@ -119,4 +121,32 @@ func (r Repository) GetNearByTransports(userLocation queryLocation) transportLoc
 
 	// fmt.Println("DEBUG: getNearbyResult ", results)
 	return results
+}
+
+func (r Repository) addUpdatePublicKey(phoneNumber int64, publicKey string) {
+	session, _ := mgo.Dial(SERVER)
+	defer session.Close()
+
+	data := publicKeys{}
+	data.PhoneNumber = phoneNumber
+	data.PublicKey = publicKey
+
+	err := session.DB(DBName).C(publicKeyCollection).Insert(data)
+	if err != nil {
+		log.Println("Adding/updating the phone number and public key mapping failed")
+	}
+}
+
+func (r Repository) getPublicKey(phoneNumber int64) string {
+	session, _ := mgo.Dial(SERVER)
+	defer session.Close()
+
+	var public_key string
+	err := session.DB(DBName).C(publicKeyCollection).FindId(phoneNumber).One(&public_key)
+
+	if err != nil {
+		log.Printf("Public key for %d do not exist.\n", phoneNumber)
+	}
+
+	return public_key
 }

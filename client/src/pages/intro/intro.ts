@@ -36,23 +36,23 @@ export class IntroPage {
      }).catch((error) => {
        console.log('Error getting location', error);
      });
- 
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad IntroPage');
   }
   opendriver(){
-    
+
     //var keypair = require('../../assets/js/keypair/index.js');
     /*var pair = keypair();
     console.log(pair.private);
     console.log(pair.public);*/
-    
-    
+
+
     this.navCtrl.push(HomePage);
 
-    
+
   }
   openclient(){
     this.navCtrl.push(ClientPage);
@@ -70,52 +70,52 @@ export class IntroPage {
       }
       else{
         console.log(value);
-        let headers=new Headers();   
+        let headers=new Headers();
         headers.append('Access-Control-Allow-Origin','*');
         headers.append('Access-Control-Allow-Headers' , '*');
         headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT');
         headers.append('Accept','application/json');
         headers.append('Access-Control-Allow-Credentials','*');
         headers.append('content-type','application/json');
-        
+
         this.storage.get('port').then((val) => {
           this.storage.get('ip').then((val1) => {
-        
+
             let alert = this.alertCtrl.create();
             alert.setTitle('Which planets have you visited?');
-        
+
             alert.addInput({
               type: 'radio',
               label: 'I am Available',
               value: 'I am Available',
               checked: true
             });
-        
+
             alert.addInput({
               type: 'radio',
               label: 'I am busy.Sorry.',
               value: 'I am busy.Sorry.'
             });
-        
+
             alert.addInput({
               type: 'radio',
               label: 'I am available late night.',
               value: 'I am available late night.'
             });
-        
+
             alert.addInput({
               type: 'radio',
               label: 'I do not work late night',
               value: 'I do not work late night'
             });
-        
+
             alert.addInput({
               type: 'radio',
               label: 'I would be back Soon',
               value: 'I would be back Soon'
             });
-        
-        
+
+
             alert.addButton('Cancel');
             alert.addButton({
               text: 'Okay',
@@ -128,27 +128,27 @@ export class IntroPage {
                   Latitude:this.lat,
                   Longitude:this.long,
                   Message: String(data)
-                     
+
                 };
                 console.log(body);
                 this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(body),{headers:headers}).subscribe(data=>{
-                 
-                console.log(data);       
+
+                console.log(data);
                 });
               }
             });
             alert.present().then(() => {
-              this.testRadioOpen = true;             
+              this.testRadioOpen = true;
 
             });
 
-        
+
       });
     });
 
 
       }
-      
+
     });
   }
 
