@@ -23,11 +23,11 @@ type queryLocation struct {
 }
 
 type publicKeys struct {
-	PhoneNumber int64  `bson:"_id"`
-	PublicKey   string `bson:"public_key"`
+	ID        int64  `bson:"_id"`
+	PublicKey string `bson:"public_key"`
 }
 
 type encryptedData struct {
-	PhoneNumber int64  `json:"PhoneNumber"`
-	Data        string `json:"Data"`
+	ID   int64  `json:"PhoneNumber"`
+	Data string `json:"Data"`
 }
