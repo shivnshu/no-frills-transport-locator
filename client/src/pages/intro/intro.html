@@ -10,15 +10,21 @@
     <ion-title>
       <img src="../../assets/imgs/test.png" style="width:23%; padding-top:1%;">
     </ion-title>
-    
-      <button ion-button id="setting" ion-button (click)="opensettings()" icon-end>
+    <ion-buttons end>
+      <button  id="setting" ion-button (click)="opensettings()" icon-end>
         <ion-icon name="settings"></ion-icon>
       </button>
+    </ion-buttons>
       </div>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="login-background" padding>
+    <br>
+    <br>
+     <br><br>
+     <br>
+   <br><br>
   <button ion-button color="btn" (click)="openclient()" class="special">
       <div class="grid-full">
         <ion-row>
@@ -34,9 +40,9 @@
         </ion-row>
       </div>
     </button>
-  <br><br><br>
-    <img src="../../assets/imgs/taxi.jpg" style="width: 65%; margin-left: 15%; height: 20%;">
-    <br><br>
+  <br>
+   <br>
+   
     <button ion-button color="btn" (click)="opendriver()" class="special">
         <div class="grid-full">
           <ion-row>
@@ -53,8 +59,9 @@
         </div>
       </button>
       <br><br><br><br>
-      <button ion-button full color="btn" style="margin-top: 20px; color: black;" (click)="update()"> Already Regiistered? UPDATE</button>
+      <button ion-button full color="btn" style="margin-top: 20px; color: #ff0066;" (click)="update()"> Already Regiistered? UPDATE</button>
       <br><br>
+       <!--<img src="../../assets/imgs/taxi.jpg" style="width: 65%; margin-left: 15%; height: 20%;">-->
       <!-- <div style="display: flex; justify-content: center;">
           <img src="../../assets/imgs/taxi1.jpg" style="width: 120px; height: 120px;" />
         </div> -->
