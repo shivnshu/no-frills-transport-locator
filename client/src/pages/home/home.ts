@@ -75,7 +75,7 @@ export class HomePage  {
     
     //console.log(st); 
     crypto2.createKeyPair().then(({ privateKey, publicKey })=>{
-      //console.log(privateKey);
+      console.log(privateKey);
       let body={
         ID:parseInt(this.mobile),
         Latitude:this.lat,
@@ -84,25 +84,17 @@ export class HomePage  {
         Message:String(this.message),
         PhoneNumber:String(this.mobile),
         CarNumber:String(this.carnum),
-        PrivateKey:privateKey
+        PublicKey:privateKey
         //Latitude:"125.32",
         //Longitude:"120.41",
         //SearchParameter:"10"
   
       };
-      var st= JSON.stringify(body);
-      crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
         //alert(encrypted);
         
-          let dat={
-            PhoneNumber:parseInt(this.mobile),            
-            Data:encrypted,
-            PrivateKey:privateKey
-          };
           
           
-          console.log(dat);
-          this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
+          this.http.post('http://'+val1+':'+val+'/add_new_transport',JSON.stringify(body),{headers:headers}).subscribe(data=>{
             var content=String(data.text());
             var matched="Signup failed. Try signing in."; 
             if(content==matched){
@@ -117,7 +109,7 @@ export class HomePage  {
           
           
         });
-      });     
+           
       
     });
 
