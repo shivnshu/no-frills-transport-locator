@@ -140,7 +140,7 @@ export class IntroPage {
                   var st= JSON.stringify(body);
                   crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
                     let dat={
-                      PhoneNumber:parseInt(value),            
+                      ID:parseInt(value),            
                       Data:encrypted,
                     };
                     console.log(dat);
