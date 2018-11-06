@@ -7,8 +7,9 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { Storage } from '@ionic/storage';
 import crypto2 from 'crypto2';
 import 'rxjs/add/operator/map';
-import { Injectable } from '@angular/core';
 
+import { JSEncrypt } from 'jsencrypt';
+import { Injectable } from '@angular/core';
 
 @Component({
   selector: 'page-home',
@@ -75,7 +76,8 @@ export class HomePage  {
     
     //console.log(st); 
     crypto2.createKeyPair().then(({ privateKey, publicKey })=>{
-      console.log(privateKey);
+      //console.log(privateKey);
+      
       let body={
         ID:parseInt(this.mobile),
         Latitude:this.lat,
@@ -90,7 +92,7 @@ export class HomePage  {
         //SearchParameter:"10"
   
       };
-        //alert(encrypted);
+      
         
           
           

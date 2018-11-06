@@ -10,6 +10,7 @@ import { AlertController } from 'ionic-angular';
 import {Injectable} from '@angular/core';
 import keypair from 'keypair';
 import crypto2 from 'crypto2';
+import { JSEncrypt } from 'jsencrypt';
 
 /**
  * Generated class for the IntroPage page.
@@ -137,19 +138,26 @@ export class IntroPage {
                 // console.log(data);
 
                 this.storage.get('key').then((publicKey) => {
+                  
                   var st= JSON.stringify(body);
-                  crypto2.encrypt.rsa(st, publicKey).then((encrypted)=>{
+                  let encrypt = new JSEncrypt();
+                  encrypt.setPublicKey(publicKey);
+                  var encrypted = encrypt.encrypt(st);
+                               
+
+                  
                     let dat={
                       ID:parseInt(value),            
                       Data:encrypted,
                     };
+                  
                     console.log(dat);
                     this.http.post('http://'+val1+':'+val+'/update_transport_location',JSON.stringify(dat),{headers:headers}).subscribe(data=>{
                  
                       console.log(data);       
                       });
 
-                  });
+                
                 });
                
                 
