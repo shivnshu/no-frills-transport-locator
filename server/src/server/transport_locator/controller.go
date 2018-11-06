@@ -1,6 +1,7 @@
 package transport_locator
 
 import (
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
@@ -14,18 +15,40 @@ type Controller struct {
 	Repository Repository
 }
 
-func extractPublicKey(key string) *rsa.PublicKey {
+func (c *Controller) extractPublicKey(key string) *rsa.PrivateKey {
 	block, _ := pem.Decode([]byte(key))
 	if block == nil {
 		log.Println("Error reading key")
 	}
-	parsedData, err := x509.ParsePKIXPublicKey(block.Bytes)
+	publicKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
-		log.Println("Could not decode public key")
+		log.Println("Error decoding PKI key")
+	}
+	/*
+		parsedData, err := x509.ParsePKIXPublicKey(block.Bytes)
+		if err != nil {
+			log.Println("Could not decode public key")
+			panic(err)
+		}
+		publicKey := parsedData.(*rsa.PublicKey)
+	*/
+	return publicKey
+}
+
+func (c *Controller) decryptTransportLocation(data encryptedData) transportLocation {
+	ID := data.ID
+	publicKey := c.Repository.getPublicKey(ID)
+	decryptKey := c.extractPublicKey(publicKey)
+	decryped, err := rsa.DecryptPKCS1v15(rand.Reader, decryptKey, []byte(data.Data))
+	if err != nil {
+		log.Println("Unable to decryp data")
+	}
+	location := transportLocation{}
+	err = json.Unmarshal(decryped, &location)
+	if err != nil {
 		panic(err)
 	}
-	publicKey := parsedData.(*rsa.PublicKey)
-	return publicKey
+	return location
 }
 
 func (c *Controller) GetAllTransportsLocations(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +66,6 @@ func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called AddNewTransport controller")
 
 	var location transportLocation
-	var publicKey *rsa.PublicKey
 
 	err := json.NewDecoder(r.Body).Decode(&location)
 	if err != nil {
@@ -52,7 +74,7 @@ func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 
 	// publicKey = extractPublicKey(location.PublicKey)
 	// log.Println(publicKey)
-	c.Repository.addUpdatePublicKey(location.PhoneNumber, location.PublicKey)
+	c.Repository.addUpdatePublicKey(location.ID, location.PublicKey)
 
 	// Seconds since unix epoch
 	location.TimeStamp = time.Now().Unix()
@@ -65,18 +87,6 @@ func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Signup failed. Try signing in."))
 	}
 	return
-
-	/*
-		// DEBUG
-		locationJson, err := json.Marshal(location)
-		if err != nil {
-			panic(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(locationJson)
-		return
-	*/
 }
 
 func (c *Controller) DeleteTransport(w http.ResponseWriter, r *http.Request) {
@@ -101,30 +111,26 @@ func (c *Controller) DeleteTransport(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Deletion failed. Driver with supplied ID does not exist."))
 	}
 	return
-
-	/*
-		// DEBUG
-		locationJson, err := json.Marshal(location)
-		if err != nil {
-			panic(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(locationJson)
-		return
-	*/
 }
 
 func (c *Controller) UpdateTransportLocation(w http.ResponseWriter, r *http.Request) {
 	log.Println("Called UpdateTransportLocation controller")
 
-	location := transportLocation{}
+	data := encryptedData{}
 
-	location.TimeStamp = time.Now().Unix()
-	err := json.NewDecoder(r.Body).Decode(&location)
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		panic(err)
 	}
+
+	location := c.decryptTransportLocation(data)
+
+	location.TimeStamp = time.Now().Unix()
+	// err := json.NewDecoder(r.Body).Decode(&location)
+	// if err != nil {
+	// panic(err)
+	// }
+
 	if location.ID == 0 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Driver ID not supplied"))
@@ -143,18 +149,6 @@ func (c *Controller) UpdateTransportLocation(w http.ResponseWriter, r *http.Requ
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	return
-
-	/*
-		// DEBUG
-		locationJson, err := json.Marshal(location)
-		if err != nil {
-			panic(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(locationJson)
-		return
-	*/
 }
 
 func (c *Controller) GetNearbyTransports(w http.ResponseWriter, r *http.Request) {
@@ -174,16 +168,4 @@ func (c *Controller) GetNearbyTransports(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 	return
-
-	/*
-		// DEBUG
-		userLocationJson, err := json.Marshal(userLocation)
-		if err != nil {
-			panic(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(userLocationJson)
-		return
-	*/
 }

@@ -119,33 +119,32 @@ func (r Repository) GetNearByTransports(userLocation queryLocation) transportLoc
 		log.Println("Failed to get results of GetNearByTransports:", err)
 	}
 
-	// fmt.Println("DEBUG: getNearbyResult ", results)
 	return results
 }
 
-func (r Repository) addUpdatePublicKey(phoneNumber int64, publicKey string) {
+func (r Repository) addUpdatePublicKey(ID int64, publicKey string) {
 	session, _ := mgo.Dial(SERVER)
 	defer session.Close()
 
 	data := publicKeys{}
-	data.PhoneNumber = phoneNumber
+	data.ID = ID
 	data.PublicKey = publicKey
 
-	err := session.DB(DBName).C(publicKeyCollection).Insert(data)
+	_, err := session.DB(DBName).C(publicKeyCollection).UpsertId(data.ID, data)
 	if err != nil {
 		log.Println("Adding/updating the phone number and public key mapping failed")
 	}
 }
 
-func (r Repository) getPublicKey(phoneNumber int64) string {
+func (r Repository) getPublicKey(ID int64) string {
 	session, _ := mgo.Dial(SERVER)
 	defer session.Close()
 
 	var public_key string
-	err := session.DB(DBName).C(publicKeyCollection).FindId(phoneNumber).One(&public_key)
+	err := session.DB(DBName).C(publicKeyCollection).FindId(ID).One(&public_key)
 
 	if err != nil {
-		log.Printf("Public key for %d do not exist.\n", phoneNumber)
+		log.Printf("Public key for %d do not exist.\n", ID)
 	}
 
 	return public_key
