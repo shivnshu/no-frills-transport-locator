@@ -39,6 +39,7 @@ func (r Repository) AddNewTransport(location transportLocation) bool {
 	defer session.Close()
 
 	var idLocation interface{}
+
 	err = session.DB(DBName).C(Collection).FindId(location.ID).One(&idLocation)
 	if err == nil {
 		log.Printf("Transport with ID %d already exists.\n", location.ID)
@@ -140,12 +141,12 @@ func (r Repository) getPublicKey(ID int64) string {
 	session, _ := mgo.Dial(SERVER)
 	defer session.Close()
 
-	var public_key string
-	err := session.DB(DBName).C(publicKeyCollection).FindId(ID).One(&public_key)
+	data := publicKeys{}
+	err := session.DB(DBName).C(publicKeyCollection).FindId(ID).One(&data)
 
 	if err != nil {
 		log.Printf("Public key for %d do not exist.\n", ID)
 	}
 
-	return public_key
+	return data.PublicKey
 }

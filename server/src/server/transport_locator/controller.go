@@ -3,7 +3,9 @@ package transport_locator
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	// "crypto/sha256"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"log"
@@ -24,14 +26,6 @@ func (c *Controller) extractPublicKey(key string) *rsa.PrivateKey {
 	if err != nil {
 		log.Println("Error decoding PKI key")
 	}
-	/*
-		parsedData, err := x509.ParsePKIXPublicKey(block.Bytes)
-		if err != nil {
-			log.Println("Could not decode public key")
-			panic(err)
-		}
-		publicKey := parsedData.(*rsa.PublicKey)
-	*/
 	return publicKey
 }
 
@@ -39,10 +33,13 @@ func (c *Controller) decryptTransportLocation(data encryptedData) transportLocat
 	ID := data.ID
 	publicKey := c.Repository.getPublicKey(ID)
 	decryptKey := c.extractPublicKey(publicKey)
-	decryped, err := rsa.DecryptPKCS1v15(rand.Reader, decryptKey, []byte(data.Data))
+	cipherData, _ := base64.StdEncoding.DecodeString(data.Data)
+	decryped, err := rsa.DecryptPKCS1v15(rand.Reader, decryptKey, cipherData)
 	if err != nil {
-		log.Println("Unable to decryp data")
+		log.Println("Unable to decrypt data")
+		panic(err)
 	}
+
 	location := transportLocation{}
 	err = json.Unmarshal(decryped, &location)
 	if err != nil {
@@ -71,7 +68,6 @@ func (c *Controller) AddNewTransport(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-
 	// publicKey = extractPublicKey(location.PublicKey)
 	// log.Println(publicKey)
 	c.Repository.addUpdatePublicKey(location.ID, location.PublicKey)

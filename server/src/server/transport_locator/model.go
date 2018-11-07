@@ -28,6 +28,6 @@ type publicKeys struct {
 }
 
 type encryptedData struct {
-	ID   int64  `json:"PhoneNumber"`
-	Data string `json:"Data"`
+	ID   int64  `bson:"_id"`
+	Data string `bson:"data"`
 }
